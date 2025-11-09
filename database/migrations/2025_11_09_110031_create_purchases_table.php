@@ -1,0 +1,39 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('purchases', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('vendor_id')->constrained('vendors')->cascadeOnDelete();
+            $table->string('total_amount');
+            $table->string('total_quantity');
+            $table->date('order_date');
+            $table->date('expected_date');
+            $table->string('total_discount_amt');
+            $table->string('status')->default('draft')->comment('draft,received,cancel');
+            $table->string('payment_status')->default('unpaid')->comment('unpaid,partial,paid');
+            $table->string('payment_method')->default('cash')->comment('cash,bank');
+            $table->string('notes');
+            $table->string('total_paid_amount')->nullable();
+            $table->string('total_due_amount')->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('purchases');
+    }
+};
